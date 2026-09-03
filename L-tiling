@@ -1,0 +1,63 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+
+class Solution
+{
+public:
+    int tile = 0;
+
+    void solve(int r, int c, int n, int mr, int mc,
+               vector<vector<int>>& grid)
+    {
+        if(n == 2)
+        {
+            tile++;
+
+            for(int i = r; i < r + 2; i++)
+                for(int j = c; j < c + 2; j++)
+                    if(grid[i][j] == 0)
+                        grid[i][j] = tile;
+
+            return;
+        }
+
+        int m = n / 2;
+        int x = r + m - 1;
+        int y = c + m - 1;
+
+        int q;
+
+        if(mr < r + m && mc < c + m)
+            q = 1;
+        else if(mr < r + m)
+            q = 2;
+        else if(mc < c + m)
+            q = 3;
+        else
+            q = 4;
+
+        tile++;
+
+        if(q != 1) grid[x][y] = tile;
+        if(q != 2) grid[x][y + 1] = tile;
+        if(q != 3) grid[x + 1][y] = tile;
+        if(q != 4) grid[x + 1][y + 1] = tile;
+
+        solve(r, c, m,
+              q == 1 ? mr : x,
+              q == 1 ? mc : y, grid);
+
+        solve(r, c + m, m,
+              q == 2 ? mr : x,
+              q == 2 ? mc : y + 1, grid);
+
+        solve(r + m, c, m,
+              q == 3 ? mr : x + 1,
+              q == 3 ? mc : y, grid);
+
+        solve(r + m, c + m, m,
+              q == 4 ? mr : x + 1,
+              q == 4 ? mc : y + 1, grid);
+    }
+};
